@@ -25,6 +25,7 @@ export const routes: Routes = [
     },
     {
         path: 'home',
+        title: 'OLB Graduates 2024 | Home',
         component: HomeComponent,
         canActivate: [AuthGuard],
         data: { authGuardPipe: redirectUnauthorizedToLogin },

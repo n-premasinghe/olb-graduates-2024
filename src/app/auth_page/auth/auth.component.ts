@@ -29,7 +29,7 @@ export class AuthComponent {
     }
 
     if (this.isLoginMode) {
-      //
+      this.authService.login(email, password);
     } else {
       this.authService.signUpEmail(email, password);
     }
