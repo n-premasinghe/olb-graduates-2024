@@ -13,7 +13,7 @@
                 </div>
               </div>
             </div>
-            <form action="#!">
+            <form>
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
@@ -30,7 +30,7 @@
                 <div class="col-12"></div>
                 <div class="col-12">
                   <div class="d-grid">
-                    <button class="btn bsb-btn-2xl btn-primary" type="submit">Log in now</button>
+                    <button class="btn bsb-btn-2xl btn-primary" type="submit">{{ isLoginMode ? 'Login' : 'Sign Up'}}</button>
                   </div>
                 </div>
               </div>
@@ -39,8 +39,8 @@
               <div class="col-12">
                 <hr class="mt-5 mb-4 border-secondary-subtle">
                 <div class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end">
-                  <a href="#!" class="link-secondary text-decoration-none">Create new account</a>
-                  <a href="#!" class="link-secondary text-decoration-none">Forgot password</a>
+                  <a class="link-secondary text-decoration-none" (click)="onSwitchMode()">{{ isLoginMode ? 'Create an account' : 'Sign in'}}</a>
+                  <a class="link-secondary text-decoration-none">Forgot password</a>
                 </div>
               </div>
             </div>

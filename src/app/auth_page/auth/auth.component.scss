@@ -3,6 +3,10 @@
     height: 100%;
 }
 
+a:hover {
+    cursor: pointer;
+}
+
 $d: 70; // density
 $w: 600; // grid size
 $s: 7s; // speed

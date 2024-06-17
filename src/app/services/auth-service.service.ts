@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, User, authState, signInWithEmailAndPassword, signInWithPopup, signOut, user, getAuth, GoogleAuthProvider } from '@angular/fire/auth';
+import { Auth, User, authState, signInWithEmailAndPassword, signInWithPopup, signOut, user, getAuth, GoogleAuthProvider, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription, map, switchMap, filter, Observable } from 'rxjs';
 
@@ -20,6 +20,10 @@ export class AuthServiceService {
       this.currentUser = aUser;
     })
   }
+
+  // signUpEmail() {
+  //   createUserWithEmailAndPassword(this.auth, )
+  // }
 
   loginPopup() {
     signInWithPopup(this.auth, this.provider).then((result) => {
