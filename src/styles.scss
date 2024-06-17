@@ -39,6 +39,7 @@ $grad: ();
 .snow,
 .snow:before,
 .snow:after {
+  pointer-events: none;
   position: absolute;
   top: -$w + px;
   left: 0;
