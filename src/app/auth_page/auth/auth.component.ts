@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
+import { AuthServiceService } from '../../services/auth-service.service';
 
 @Component({
   selector: 'app-auth',
@@ -9,6 +10,6 @@ import { Auth } from '@angular/fire/auth';
   styleUrl: './auth.component.scss'
 })
 export class AuthComponent {
-  private auth = inject(Auth)
-  
+  authService = inject(AuthServiceService);
+  user$ = this.authService.user$;
 }
