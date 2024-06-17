@@ -13,24 +13,24 @@
                 </div>
               </div>
             </div>
-            <form>
+            <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" ngModel required email>
                     <label for="email" class="form-label">Email</label>
                   </div>
                 </div>
                 <div class="col-12">
                   <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" required>
+                    <input type="password" class="form-control" name="password" id="password" value="" placeholder="Password" minlength="6" ngModel required>
                     <label for="password" class="form-label">Password</label>
                   </div>
                 </div>
                 <div class="col-12"></div>
                 <div class="col-12">
                   <div class="d-grid">
-                    <button class="btn bsb-btn-2xl btn-primary" type="submit">{{ isLoginMode ? 'Login' : 'Sign Up'}}</button>
+                    <button class="btn bsb-btn-2xl btn-primary" type="submit" [disabled]="!authForm.valid">{{ isLoginMode ? 'Login' : 'Sign Up'}}</button>
                   </div>
                 </div>
               </div>
