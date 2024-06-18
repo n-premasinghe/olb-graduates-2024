@@ -10,6 +10,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription, map, switchMap, filter, Observable } from 'rxjs';
@@ -37,7 +38,7 @@ export class AuthServiceService {
       .then((userCredential) => {
         // signed up
         const user = userCredential.user;
-        this.router.navigate(['/', 'home'])
+        this.router.navigate(['/', 'home']);
       })
       .catch((error) => {
         console.log(error);
@@ -54,14 +55,14 @@ export class AuthServiceService {
 
   login(email: string, password: string) {
     signInWithEmailAndPassword(this.auth, email, password)
-    .then((userCredential) => {
-      // signed in
-      const user = userCredential.user;
-      this.router.navigate(['/', 'home'])
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      .then((userCredential) => {
+        // signed in
+        const user = userCredential.user;
+        this.router.navigate(['/', 'home']);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   logout() {
@@ -73,5 +74,9 @@ export class AuthServiceService {
       .catch((error) => {
         console.log('sign out error: ' + error);
       });
+  }
+
+  forgotPassword(email: string) {
+    sendPasswordResetEmail(this.auth, email);
   }
 }

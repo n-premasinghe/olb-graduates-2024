@@ -3,10 +3,12 @@ import { Auth } from '@angular/fire/auth';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { FormsModule, NgForm } from '@angular/forms';
 
+import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
+
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ForgotPasswordComponent],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.scss',
 })
@@ -15,6 +17,15 @@ export class AuthComponent {
   user$ = this.authService.user$;
 
   isLoginMode = true;
+  isForgotPassword = false;
+
+  onForgotPassword(){
+    this.isForgotPassword = true;
+  }
+
+  onCancelForgotPassword() {
+    this.isForgotPassword = false;
+  }
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
