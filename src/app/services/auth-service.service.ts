@@ -77,6 +77,13 @@ export class AuthServiceService {
   }
 
   forgotPassword(email: string) {
-    sendPasswordResetEmail(this.auth, email);
+    sendPasswordResetEmail(this.auth, email)
+    .then(() => {
+      this.router.navigate(['/', 'login']);
+      console.log('Password Reset Sent!');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 }

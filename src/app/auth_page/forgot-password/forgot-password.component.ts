@@ -23,6 +23,8 @@ export class ForgotPasswordComponent {
 
     this.authService.forgotPassword(email);
 
+    this.cancel.emit()
+
     form.reset();
   }
 
