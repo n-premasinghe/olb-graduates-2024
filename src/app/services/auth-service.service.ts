@@ -30,7 +30,8 @@ import {
   DocumentData,
   FieldValue,
   addDoc,
-} from 'firebase/firestore';
+  collectionData,
+} from '@angular/fire/firestore';
 
 type gradUser = {
   name: string | null;
@@ -54,7 +55,7 @@ export class AuthServiceService {
   userSubscription: Subscription;
 
   firestore: Firestore = inject(Firestore);
-  storage: Storage = inject(Storage);
+  // storage: Storage = inject(Storage);
 
   constructor() {
     this.userSubscription = this.user$.subscribe((aUser: User | null) => {
@@ -82,8 +83,11 @@ export class AuthServiceService {
   loginPopup() {
     signInWithPopup(this.auth, this.provider).then((result) => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
+      const user = result.user;
 
-      this.addUser(this.currentUser!.displayName, this.currentUser!.uid, this.currentUser!.photoURL)
+      // add user to db
+      this.addUser(user.displayName, user.uid, user.photoURL);
+
       this.router.navigate(['/', 'home']);
       return credential;
     });
@@ -177,4 +181,13 @@ export class AuthServiceService {
       return;
     }
   };
+
+  // Load users
+  loadUsers = () => {
+    const usersQuery = query(collection(this.firestore, 'users'))
+
+    return collectionData(usersQuery);
+  }
+
+
 }
