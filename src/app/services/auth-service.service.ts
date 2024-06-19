@@ -14,6 +14,30 @@ import {
   updateCurrentUser,
   updateProfile,
 } from '@angular/fire/auth';
+
+import {
+  DocumentReference,
+  Firestore,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  deleteDoc,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+  DocumentData,
+  FieldValue,
+  addDoc,
+} from 'firebase/firestore';
+
+type gradUser = {
+  name: string | null;
+  uid: string | null;
+  profilePicUrl: string | null;
+};
+
 import { Router } from '@angular/router';
 import { Subscription, map, switchMap, filter, Observable } from 'rxjs';
 
@@ -29,6 +53,9 @@ export class AuthServiceService {
   currentUser: User | null = this.auth.currentUser;
   userSubscription: Subscription;
 
+  firestore: Firestore = inject(Firestore);
+  storage: Storage = inject(Storage);
+
   constructor() {
     this.userSubscription = this.user$.subscribe((aUser: User | null) => {
       this.currentUser = aUser;
@@ -41,7 +68,11 @@ export class AuthServiceService {
       .then((userCredential) => {
         // signed up
         const user = userCredential.user;
-        this.router.navigate(['/', 'home']);
+        if (!user.displayName) {
+          this.router.navigate(['/', 'update-profile']);
+        } else {
+          this.router.navigate(['/', 'home']);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -51,6 +82,8 @@ export class AuthServiceService {
   loginPopup() {
     signInWithPopup(this.auth, this.provider).then((result) => {
       const credential = GoogleAuthProvider.credentialFromResult(result);
+
+      this.addUser(this.currentUser!.displayName, this.currentUser!.uid, this.currentUser!.photoURL)
       this.router.navigate(['/', 'home']);
       return credential;
     });
@@ -61,6 +94,9 @@ export class AuthServiceService {
       .then((userCredential) => {
         // signed in
         const user = userCredential.user;
+
+        // usersList = query(collection(this.firestore, 'users'), )
+
         if (!user.displayName) {
           this.router.navigate(['/', 'update-profile']);
         } else {
@@ -99,7 +135,46 @@ export class AuthServiceService {
     updateProfile(this.currentUser!, {
       displayName: name,
     }).then(() => {
+      this.addUser(this.currentUser!.displayName, this.currentUser!.uid, null)
       this.router.navigate(['/', 'home']);
     });
   }
+
+  // add users to firestore
+  addUser = async (
+    userName: string | null,
+    uid: string | null,
+    imageUrl: string | null
+  ): Promise<void | DocumentReference<DocumentData>> => {
+    if (!userName && !imageUrl) {
+      console.log('addUser called without name or pfp');
+      return;
+    }
+
+    if (this.currentUser === null) {
+      console.log('add user requires user');
+      return;
+    }
+
+    const user: gradUser = {
+      name: this.currentUser.displayName,
+      profilePicUrl: this.currentUser.photoURL,
+      uid: this.currentUser.uid,
+    };
+
+    userName && (user.name = userName);
+    uid && (user.uid = uid);
+    imageUrl && (user.profilePicUrl = imageUrl);
+
+    try {
+      const newUserRef = await addDoc(
+        collection(this.firestore, 'users'),
+        user
+      );
+      return newUserRef;
+    } catch (error) {
+      console.error('Error writing user to Firestore', error);
+      return;
+    }
+  };
 }

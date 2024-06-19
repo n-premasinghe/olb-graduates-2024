@@ -13,4 +13,7 @@ import { UserCardComponent } from '../user-card/user-card.component';
 export class HomeComponent {
   authService = inject(AuthServiceService);
   user$ = this.authService.user$;
+
+  // users = this.authService.
+
 }
