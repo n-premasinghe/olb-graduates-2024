@@ -11,6 +11,8 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  updateCurrentUser,
+  updateProfile,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { Subscription, map, switchMap, filter, Observable } from 'rxjs';
@@ -33,6 +35,7 @@ export class AuthServiceService {
     });
   }
 
+  // Authentication Functions
   signUpEmail(email: string, password: string) {
     createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCredential) => {
@@ -58,6 +61,9 @@ export class AuthServiceService {
       .then((userCredential) => {
         // signed in
         const user = userCredential.user;
+        if (!user.displayName) {
+          this.router.navigate(['/', 'update-profile']);
+        }
         this.router.navigate(['/', 'home']);
       })
       .catch((error) => {
@@ -86,4 +92,15 @@ export class AuthServiceService {
       console.log(error);
     });
   }
+
+  // Excess info functions
+  addDisplayName(name: string) {
+    updateProfile(this.currentUser!, {
+      displayName: name
+    }).then(() => {
+      this.router.navigate(['/', 'home']);
+    })
+  }
+
+
 }
