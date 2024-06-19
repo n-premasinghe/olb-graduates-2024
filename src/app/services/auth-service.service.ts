@@ -63,8 +63,9 @@ export class AuthServiceService {
         const user = userCredential.user;
         if (!user.displayName) {
           this.router.navigate(['/', 'update-profile']);
+        } else {
+          this.router.navigate(['/', 'home']);
         }
-        this.router.navigate(['/', 'home']);
       })
       .catch((error) => {
         console.log(error);
@@ -84,23 +85,21 @@ export class AuthServiceService {
 
   forgotPassword(email: string) {
     sendPasswordResetEmail(this.auth, email)
-    .then(() => {
-      this.router.navigate(['/', 'login']);
-      console.log('Password Reset Sent!');
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      .then(() => {
+        this.router.navigate(['/', 'login']);
+        console.log('Password Reset Sent!');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   // Excess info functions
   addDisplayName(name: string) {
     updateProfile(this.currentUser!, {
-      displayName: name
+      displayName: name,
     }).then(() => {
       this.router.navigate(['/', 'home']);
-    })
+    });
   }
-
-
 }
