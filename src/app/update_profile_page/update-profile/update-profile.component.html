@@ -14,7 +14,7 @@
                 </div>
               </div>
             </div>
-            <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)">
+            <form #profileForm="ngForm" (ngSubmit)="onSubmit(profileForm)">
               <div class="row gy-3 overflow-hidden">
                 <div class="col-12">
                   <div class="form-floating mb-3">
@@ -23,12 +23,28 @@
                       class="form-control"
                       name="displayName"
                       id="displayName"
-                      placeholder="Awesome McAwesome"
+                      value= {{this.authService.currentUser?.displayName?.toString()}}
                       minlength="2"
                       ngModel
                       required
                     />
                     <label for="displayName" class="form-label">Display Name</label>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-floating mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="gradQuote"
+                      id="gradQuote"
+                      placeholder="This really was, Our Lady of the Bay"
+                      minlength="2"
+                      maxlength="100"
+                      ngModel
+                      required
+                    />
+                    <label for="gradQuote" class="form-label">Grad Quote</label>
                   </div>
                 </div>
                 <!-- <div class="col-12">
@@ -53,7 +69,7 @@
                     <button
                       class="btn bsb-btn-2xl btn-primary"
                       type="submit"
-                      [disabled]="!authForm.valid"
+                      [disabled]="!profileForm.valid"
                     >
                     Submit
                     </button>

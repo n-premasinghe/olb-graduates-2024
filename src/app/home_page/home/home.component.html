@@ -6,7 +6,7 @@
     <section class="py-5 text-center container">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-            @for (user of (users$ | async); track user) {
+            @for (user of (users$ | async); track user['uid']) {
                 <app-user-card [user]="user" />
             }
             </div>

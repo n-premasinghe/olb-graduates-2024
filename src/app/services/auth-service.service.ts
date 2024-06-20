@@ -13,6 +13,7 @@ import {
   sendPasswordResetEmail,
   updateCurrentUser,
   updateProfile,
+  getAdditionalUserInfo,
 } from '@angular/fire/auth';
 
 import {
@@ -33,10 +34,13 @@ import {
   collectionData,
 } from '@angular/fire/firestore';
 
+import { AsyncPipe } from '@angular/common';
+
 type gradUser = {
   name: string | null;
   uid: string | null;
   profilePicUrl: string | null;
+  gradQuote: string | null;
 };
 
 import { Router } from '@angular/router';
@@ -86,9 +90,18 @@ export class AuthServiceService {
       const user = result.user;
 
       // add user to db
-      this.addUser(user.displayName, user.uid, user.photoURL);
+      const userInfo = getAdditionalUserInfo(result);
 
-      this.router.navigate(['/', 'home']);
+      console.log(userInfo?.isNewUser);
+
+      // this.addUser(user.displayName, user.uid, user.photoURL);
+
+      if (userInfo?.isNewUser) {
+        this.router.navigate(['/', 'update-profile']);
+      } else {
+        this.router.navigate(['/', 'home']);
+      }
+
       return credential;
     });
   }
@@ -135,23 +148,26 @@ export class AuthServiceService {
   }
 
   // Excess info functions
-  addDisplayName(name: string) {
+  addDisplayName(name: string, gradQuote: string) {
     updateProfile(this.currentUser!, {
       displayName: name,
     }).then(() => {
-      this.addUser(this.currentUser!.displayName, this.currentUser!.uid, null)
-      this.router.navigate(['/', 'home']);
+      this.addUser(this.currentUser!.displayName, this.currentUser!.uid, null, gradQuote);
     });
+    this.router.navigate(['/', 'home']);
   }
 
   // add users to firestore
   addUser = async (
     userName: string | null,
     uid: string | null,
-    imageUrl: string | null
+    imageUrl: string | null,
+    gradQuote: string | null
   ): Promise<void | DocumentReference<DocumentData>> => {
-    if (!userName && !imageUrl) {
-      console.log('addUser called without name or pfp');
+    const users$ = this.loadUsers() as Observable<DocumentData>;
+
+    if (!userName && !imageUrl && !gradQuote) {
+      console.log('addUser called without name, pfp, or quote');
       return;
     }
 
@@ -160,15 +176,24 @@ export class AuthServiceService {
       return;
     }
 
+    users$.forEach((user) => {
+      if (user['uid'] === uid) {
+        console.log('User already in db');
+        return;
+      }
+    });
+
     const user: gradUser = {
       name: this.currentUser.displayName,
       profilePicUrl: this.currentUser.photoURL,
       uid: this.currentUser.uid,
+      gradQuote: gradQuote,
     };
 
     userName && (user.name = userName);
     uid && (user.uid = uid);
     imageUrl && (user.profilePicUrl = imageUrl);
+    gradQuote && (user.gradQuote = gradQuote);
 
     try {
       const newUserRef = await addDoc(
@@ -184,10 +209,8 @@ export class AuthServiceService {
 
   // Load users
   loadUsers = () => {
-    const usersQuery = query(collection(this.firestore, 'users'))
+    const usersQuery = query(collection(this.firestore, 'users'));
 
     return collectionData(usersQuery);
-  }
-
-
+  };
 }

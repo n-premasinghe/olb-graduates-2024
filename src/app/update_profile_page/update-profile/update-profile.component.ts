@@ -13,12 +13,15 @@ export class UpdateProfileComponent {
   authService = inject(AuthServiceService)
   onSubmit(form: NgForm) {
     const displayName = form.value.displayName;
+    const gradQuote = form.value.gradQuote;
 
     if (!form.valid) {
       return
     }
 
-    this.authService.addDisplayName(displayName);
+    this.authService.addDisplayName(displayName, gradQuote);
+
+    // this.authService.addUser()
 
   }
 

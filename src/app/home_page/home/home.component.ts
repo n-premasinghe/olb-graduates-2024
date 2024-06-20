@@ -18,6 +18,8 @@ export class HomeComponent {
   user$ = this.authService.user$;
   users$ = this.authService.loadUsers() as Observable<DocumentData[]>;
 
+  
+
   // users = this.authService.
 
 }
