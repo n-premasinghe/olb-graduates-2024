@@ -4,11 +4,12 @@ import { AuthServiceService } from '../../services/auth-service.service';
 import { Observable, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { HeaderComponent } from '../../header/header.component';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [AsyncPipe, HeaderComponent],
+  imports: [AsyncPipe, HeaderComponent, RouterLink, RouterLinkActive],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
