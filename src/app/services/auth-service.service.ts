@@ -32,6 +32,8 @@ import {
   FieldValue,
   addDoc,
   collectionData,
+  where,
+  getDocs,
 } from '@angular/fire/firestore';
 
 import { AsyncPipe } from '@angular/common';
@@ -44,7 +46,7 @@ type gradUser = {
 };
 
 import { Router } from '@angular/router';
-import { Subscription, map, switchMap, filter, Observable } from 'rxjs';
+import { Subscription, map, switchMap, filter, Observable, flatMap, mergeMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -147,12 +149,36 @@ export class AuthServiceService {
       });
   }
 
+  getSelectedUser(uid: string): Observable<DocumentData | null> {
+
+    const users$ = this.loadUsers() as Observable<DocumentData[]>;
+
+    return users$.pipe(
+      map(users => {
+        for (const user of users) {
+          console.log(user);
+          if (user['uid'] === uid) {
+            console.log(user);
+            return user;
+          }
+        }
+        return null;
+      })
+    )
+
+  };
+
   // Excess info functions
   addDisplayName(name: string, gradQuote: string) {
     updateProfile(this.currentUser!, {
       displayName: name,
     }).then(() => {
-      this.addUser(this.currentUser!.displayName, this.currentUser!.uid, null, gradQuote);
+      this.addUser(
+        this.currentUser!.displayName,
+        this.currentUser!.uid,
+        null,
+        gradQuote
+      );
     });
     this.router.navigate(['/', 'home']);
   }

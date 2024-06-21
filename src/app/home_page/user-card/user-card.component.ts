@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { DocumentData } from '@angular/fire/firestore';
 
@@ -11,6 +11,8 @@ import { DocumentData } from '@angular/fire/firestore';
 })
 export class UserCardComponent {
   @Input() user!: DocumentData
+  @Output() userSelected = new EventEmitter<DocumentData>();
+  
   authService = inject(AuthServiceService);
 
 
