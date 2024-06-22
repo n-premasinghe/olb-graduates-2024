@@ -6,14 +6,9 @@ body {
 }  
 
 html {
-    height: 100%;
-    overflow: hidden;
-  }
-  
-
-$d: 70; // density
-$w: 600; // grid size
-$s: 7s; // speed
+  height: 100%;
+  // overflow: auto;
+}
 
 // Generate the snow image using radial gradients
 // $grad: ();

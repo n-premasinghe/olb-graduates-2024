@@ -5,7 +5,7 @@
 <section class="pt-4" id="bg">
   <div class="container">
     <div class="main-body">
-      <div class="row">
+      <div class="row gy-3">
         @if (userDB$ | async; as user) {
 
         <div class="col-lg-4">
@@ -98,6 +98,9 @@
             </div>
           </div>
         </div> -->
+        <div class="col-lg-7 overflow-y-auto">
+            <app-comments />
+        </div>
       </div>
     </div>
   </div>
