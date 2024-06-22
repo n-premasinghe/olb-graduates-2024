@@ -149,48 +149,68 @@ export class AuthServiceService {
       });
   }
 
-  getSelectedUser(uid: string): Observable<DocumentData | null> {
+  // getSelectedUser(uid: string): Observable<DocumentData | null> {
 
-    const users$ = this.loadUsers() as Observable<DocumentData[]>;
+  //   const users$ = this.loadUsers() as Observable<DocumentData[]>;
 
-    return users$.pipe(
-      map(users => {
-        for (const user of users) {
-          console.log(user);
-          if (user['uid'] === uid) {
-            console.log(user);
-            return user;
-          }
-        }
-        return null;
-      })
-    )
+  //   return users$.pipe(
+  //     map(users => {
+  //       for (const user of users) {
+  //         console.log(user);
+  //         if (user['uid'] === uid) {
+  //           console.log(user);
+  //           return user;
+  //         }
+  //       }
+  //       return null;
+  //     })
+  //   )
 
-  };
+  // };
 
   // Excess info functions
   addDisplayName(name: string, gradQuote: string) {
     updateProfile(this.currentUser!, {
       displayName: name,
     }).then(() => {
+
+      const users$ = this.loadUsers() as Observable<DocumentData[]>
+      
+       const userInDB = users$.pipe(
+        map(users => {
+          for (const user of users) {
+            if (user['uid'] === this.currentUser!.uid) {
+              console.log(user);
+              return true;
+            }
+          }
+          return false;
+        }));
+
+        if (userInDB) {
+          // some code to updateDBProfile
+          console.log('user alr in db')
+        } else {
+      
       this.addUser(
         this.currentUser!.displayName,
         this.currentUser!.uid,
         null,
         gradQuote
       );
+    }
     });
     this.router.navigate(['/', 'home']);
   }
 
-  // add users to firestore
-  addUser = async (
+  // update users in firestore
+  updateUser = async (
     userName: string | null,
     uid: string | null,
     imageUrl: string | null,
     gradQuote: string | null
   ): Promise<void | DocumentReference<DocumentData>> => {
-    const users$ = this.loadUsers() as Observable<DocumentData>;
+    const users$ = this.loadUsers() as Observable<DocumentData[]>;
 
     if (!userName && !imageUrl && !gradQuote) {
       console.log('addUser called without name, pfp, or quote');
@@ -202,12 +222,72 @@ export class AuthServiceService {
       return;
     }
 
-    users$.forEach((user) => {
-      if (user['uid'] === uid) {
-        console.log('User already in db');
-        return;
-      }
-    });
+    users$.pipe(
+      map(users => {
+        for (const user of users) {
+          if (user['uid'] === uid) {
+            console.log(user);
+            return user;
+          }
+        }
+        return null;
+      }));
+
+    const user: gradUser = {
+      name: this.currentUser.displayName,
+      profilePicUrl: this.currentUser.photoURL,
+      uid: this.currentUser.uid,
+      gradQuote: gradQuote,
+    };
+
+    userName && (user.name = userName);
+    uid && (user.uid = uid);
+    imageUrl && (user.profilePicUrl = imageUrl);
+    gradQuote && (user.gradQuote = gradQuote);
+
+    try {
+      const newUserRef = await addDoc(
+        collection(this.firestore, 'users'),
+        user
+      );
+      return newUserRef;
+    } catch (error) {
+      console.error('Error writing user to Firestore', error);
+      return;
+    }
+  };
+
+
+  // add users to firestore
+  addUser = async (
+    userName: string | null,
+    uid: string | null,
+    imageUrl: string | null,
+    gradQuote: string | null
+  ): Promise<void | DocumentReference<DocumentData>> => {
+    const users$ = this.loadUsers() as Observable<DocumentData[]>;
+
+    if (!userName && !imageUrl && !gradQuote) {
+      console.log('addUser called without name, pfp, or quote');
+      return;
+    }
+
+    if (this.currentUser === null) {
+      console.log('add user requires user');
+      return;
+    }
+
+    users$.pipe(
+      map(users => {
+        for (const user of users) {
+          console.log(user);
+          if (user['uid'] === uid) {
+            console.log(user);
+            return user;
+          }
+        }
+        return null;
+      }));
 
     const user: gradUser = {
       name: this.currentUser.displayName,

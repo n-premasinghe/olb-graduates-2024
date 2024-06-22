@@ -31,7 +31,7 @@ export class ProfileComponent{
         }
       }
       return null;
-    }))
+    }));
 
   // userDB$ = this.authService.getSelectedUser(this.uid2);
 
