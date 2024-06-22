@@ -199,7 +199,6 @@ export class AuthServiceService {
     imageUrl: string | null,
     gradQuote: string | null
   ): Promise<void | DocumentReference<DocumentData>> => {
-    const users$ = this.loadUsers() as Observable<DocumentData[]>;
 
     if (!userName && !imageUrl && !gradQuote) {
       console.log('addUser called without name, pfp, or quote');
@@ -210,18 +209,6 @@ export class AuthServiceService {
       console.log('add user requires user');
       return;
     }
-
-    users$.pipe(
-      map((users) => {
-        for (const user of users) {
-          if (user['uid'] === uid) {
-            console.log(user);
-            return user;
-          }
-        }
-        return null;
-      })
-    );
 
     const user: gradUser = {
       name: this.currentUser.displayName,
@@ -236,10 +223,7 @@ export class AuthServiceService {
     gradQuote && (user.gradQuote = gradQuote);
 
     try {
-      const newUserRef = await addDoc(
-        collection(this.firestore, 'users'),
-        user
-      );
+      const newUserRef = await setDoc(doc(this.firestore, 'users', uid!), user);
       return newUserRef;
     } catch (error) {
       console.error('Error writing user to Firestore', error);
@@ -265,19 +249,6 @@ export class AuthServiceService {
       console.log('add user requires user');
       return;
     }
-
-    users$.pipe(
-      map((users) => {
-        for (const user of users) {
-          console.log(user);
-          if (user['uid'] === uid) {
-            console.log(user);
-            return user;
-          }
-        }
-        return null;
-      })
-    );
 
     const user: gradUser = {
       name: this.currentUser.displayName,
