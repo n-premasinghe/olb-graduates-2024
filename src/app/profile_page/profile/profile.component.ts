@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { collection, doc, DocumentData, getDoc, query } from '@angular/fire/firestore';
 import { AuthServiceService } from '../../services/auth-service.service';
 import { Observable, map } from 'rxjs';
@@ -17,7 +17,7 @@ import { CommentsComponent } from '../comments/comments.component';
 
 export class ProfileComponent{
   authService = inject(AuthServiceService);
-
+  
   @Input() uid!: string;
 
   users$ = this.authService.loadUsers() as Observable<DocumentData[]>

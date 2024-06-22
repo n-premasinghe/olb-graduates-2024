@@ -31,7 +31,7 @@
                 />
                 <div class="mt-3">
                   <h4>{{ user["name"] }}</h4>
-                  <p class="text-muted fs-5 mb-1">{{ user["gradQuote"] }}</p>
+                  <p class="text-muted fs-5 mb-3">{{ user["gradQuote"] }}</p>
                   @if (this.authService.currentUser!.uid == user['uid']) {
                   <button class="btn btn-primary" [routerLink]="['/', 'update-profile']" routerLinkActive="router-link-active">Update Profile</button>
                   }
@@ -41,70 +41,6 @@
           </div>
         </div>
         }
-        <!-- <div class="col-lg-8">
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="d-flex align-items-center mb-3">Comments</h5>
-                  <p>Web Design</p>
-                  <div class="row mb-3" style="height: 5px">
-                    <div class="col-sm-9">
-                        placeholder text and stuff yk type beat fr
-                    </div>
-                    <div class="col-sm-3">
-                        damn
-                    </div>
-                  </div>
-                  <p>Website Markup</p>
-                  <div class="progress mb-3" style="height: 5px">
-                    <div
-                      class="progress-bar bg-danger"
-                      role="progressbar"
-                      style="width: 72%"
-                      aria-valuenow="72"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                  <p>One Page</p>
-                  <div class="progress mb-3" style="height: 5px">
-                    <div
-                      class="progress-bar bg-success"
-                      role="progressbar"
-                      style="width: 89%"
-                      aria-valuenow="89"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                  <p>Mobile Template</p>
-                  <div class="progress mb-3" style="height: 5px">
-                    <div
-                      class="progress-bar bg-warning"
-                      role="progressbar"
-                      style="width: 55%"
-                      aria-valuenow="55"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                  <p>Backend API</p>
-                  <div class="progress" style="height: 5px">
-                    <div
-                      class="progress-bar bg-info"
-                      role="progressbar"
-                      style="width: 66%"
-                      aria-valuenow="66"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <div class="col-lg-7 overflow-y-auto">
             <app-comments />
         </div>

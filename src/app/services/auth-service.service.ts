@@ -44,17 +44,12 @@ type gradUser = {
   uid: string | null;
   profilePicUrl: string | null;
   gradQuote: string | null;
-  comments: {
-    public: {
-      messages: {};
-    };
-    classOnly: {
-      messages: {};
-    };
-    private: {
-      messages: {};
-    }
-  }
+};
+
+type Comment = {
+  uid: string;
+  name: string | null;
+  message: string;
 };
 
 import { Router } from '@angular/router';
@@ -270,17 +265,6 @@ export class AuthServiceService {
       profilePicUrl: this.currentUser.photoURL,
       uid: this.currentUser.uid,
       gradQuote: gradQuote,
-      comments: {
-        public: {
-          messages: {}
-        },
-        classOnly: {
-          messages: {}
-        },
-        private: {
-          messages: {}
-        }
-      }
     };
 
     userName && (user.name = userName);
@@ -303,4 +287,29 @@ export class AuthServiceService {
 
     return collectionData(usersQuery);
   };
+
+  addComment = async (message: string, uid: string, name: string | null, visibility: string) => {
+
+    const comment: Comment = {
+      message: message,
+      uid: this.currentUser!.uid,
+      name: name,
+    }
+
+    try {
+      const commentRef = await setDoc(doc(this.firestore, 'users', uid, 'comments', visibility), comment);
+      return commentRef
+    } catch (error) {
+      console.error('error adding comment', error);
+    }
+  };
+
+  loadComments = (uid: string) => {
+    const commentQuery = query(collection(this.firestore, 'users', uid, 'comments'));
+
+    return collectionData(query);
+  }
+
+
+
 }
