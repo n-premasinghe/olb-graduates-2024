@@ -34,6 +34,7 @@ import {
   collectionData,
   where,
   getDocs,
+  doc,
 } from '@angular/fire/firestore';
 
 import { AsyncPipe } from '@angular/common';
@@ -175,10 +176,13 @@ export class AuthServiceService {
     }).then(() => {
 
       const users$ = this.loadUsers() as Observable<DocumentData[]>
+
+      console.log(this.currentUser?.uid);
       
-       const userInDB = users$.pipe(
+      const userInDB = users$.pipe(
         map(users => {
           for (const user of users) {
+            console.log(user['uid'])
             if (user['uid'] === this.currentUser!.uid) {
               console.log(user);
               return true;
@@ -302,9 +306,8 @@ export class AuthServiceService {
     gradQuote && (user.gradQuote = gradQuote);
 
     try {
-      const newUserRef = await addDoc(
-        collection(this.firestore, 'users'),
-        user
+      const newUserRef = await setDoc(
+        doc(this.firestore, 'users', uid!), user
       );
       return newUserRef;
     } catch (error) {
