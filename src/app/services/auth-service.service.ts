@@ -47,7 +47,15 @@ type gradUser = {
 };
 
 import { Router } from '@angular/router';
-import { Subscription, map, switchMap, filter, Observable, flatMap, mergeMap } from 'rxjs';
+import {
+  Subscription,
+  map,
+  switchMap,
+  filter,
+  Observable,
+  flatMap,
+  mergeMap,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -174,35 +182,12 @@ export class AuthServiceService {
     updateProfile(this.currentUser!, {
       displayName: name,
     }).then(() => {
-
-      const users$ = this.loadUsers() as Observable<DocumentData[]>
-
-      console.log(this.currentUser?.uid);
-      
-      const userInDB = users$.pipe(
-        map(users => {
-          for (const user of users) {
-            console.log(user['uid'])
-            if (user['uid'] === this.currentUser!.uid) {
-              console.log(user);
-              return true;
-            }
-          }
-          return false;
-        }));
-
-        if (userInDB) {
-          // some code to updateDBProfile
-          console.log('user alr in db')
-        } else {
-      
       this.addUser(
         this.currentUser!.displayName,
         this.currentUser!.uid,
         null,
         gradQuote
       );
-    }
     });
     this.router.navigate(['/', 'home']);
   }
@@ -227,7 +212,7 @@ export class AuthServiceService {
     }
 
     users$.pipe(
-      map(users => {
+      map((users) => {
         for (const user of users) {
           if (user['uid'] === uid) {
             console.log(user);
@@ -235,7 +220,8 @@ export class AuthServiceService {
           }
         }
         return null;
-      }));
+      })
+    );
 
     const user: gradUser = {
       name: this.currentUser.displayName,
@@ -261,7 +247,6 @@ export class AuthServiceService {
     }
   };
 
-
   // add users to firestore
   addUser = async (
     userName: string | null,
@@ -282,7 +267,7 @@ export class AuthServiceService {
     }
 
     users$.pipe(
-      map(users => {
+      map((users) => {
         for (const user of users) {
           console.log(user);
           if (user['uid'] === uid) {
@@ -291,7 +276,8 @@ export class AuthServiceService {
           }
         }
         return null;
-      }));
+      })
+    );
 
     const user: gradUser = {
       name: this.currentUser.displayName,
@@ -306,9 +292,7 @@ export class AuthServiceService {
     gradQuote && (user.gradQuote = gradQuote);
 
     try {
-      const newUserRef = await setDoc(
-        doc(this.firestore, 'users', uid!), user
-      );
+      const newUserRef = await setDoc(doc(this.firestore, 'users', uid!), user);
       return newUserRef;
     } catch (error) {
       console.error('Error writing user to Firestore', error);
