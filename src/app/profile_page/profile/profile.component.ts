@@ -5,11 +5,12 @@ import { Observable, map } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { HeaderComponent } from '../../header/header.component';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { CommentsComponent } from '../comments/comments.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [AsyncPipe, HeaderComponent, RouterLink, RouterLinkActive],
+  imports: [AsyncPipe, HeaderComponent, RouterLink, RouterLinkActive, CommentsComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })

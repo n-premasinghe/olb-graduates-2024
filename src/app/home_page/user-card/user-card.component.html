@@ -5,7 +5,7 @@
       <p class="card-text">
         {{user['gradQuote']}}
       </p>
-      <a class="btn btn-primary">View Page</a>
+      <a class="btn btn-primary" [routerLink]="['/profile/', user['uid']]" routerLinkActive="router-link-active" >View Page</a>
     </div>
   </div>
 </div>

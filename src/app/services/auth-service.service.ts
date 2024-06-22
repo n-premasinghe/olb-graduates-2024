@@ -44,6 +44,17 @@ type gradUser = {
   uid: string | null;
   profilePicUrl: string | null;
   gradQuote: string | null;
+  comments: {
+    public: {
+      messages: {};
+    };
+    classOnly: {
+      messages: {};
+    };
+    private: {
+      messages: {};
+    }
+  }
 };
 
 import { Router } from '@angular/router';
@@ -193,43 +204,43 @@ export class AuthServiceService {
   }
 
   // update users in firestore
-  updateUser = async (
-    userName: string | null,
-    uid: string | null,
-    imageUrl: string | null,
-    gradQuote: string | null
-  ): Promise<void | DocumentReference<DocumentData>> => {
+  // updateUser = async (
+  //   userName: string | null,
+  //   uid: string | null,
+  //   imageUrl: string | null,
+  //   gradQuote: string | null
+  // ): Promise<void | DocumentReference<DocumentData>> => {
 
-    if (!userName && !imageUrl && !gradQuote) {
-      console.log('addUser called without name, pfp, or quote');
-      return;
-    }
+  //   if (!userName && !imageUrl && !gradQuote) {
+  //     console.log('addUser called without name, pfp, or quote');
+  //     return;
+  //   }
 
-    if (this.currentUser === null) {
-      console.log('add user requires user');
-      return;
-    }
+  //   if (this.currentUser === null) {
+  //     console.log('add user requires user');
+  //     return;
+  //   }
 
-    const user: gradUser = {
-      name: this.currentUser.displayName,
-      profilePicUrl: this.currentUser.photoURL,
-      uid: this.currentUser.uid,
-      gradQuote: gradQuote,
-    };
+  //   const user: gradUser = {
+  //     name: this.currentUser.displayName,
+  //     profilePicUrl: this.currentUser.photoURL,
+  //     uid: this.currentUser.uid,
+  //     gradQuote: gradQuote,
+  //   };
 
-    userName && (user.name = userName);
-    uid && (user.uid = uid);
-    imageUrl && (user.profilePicUrl = imageUrl);
-    gradQuote && (user.gradQuote = gradQuote);
+  //   userName && (user.name = userName);
+  //   uid && (user.uid = uid);
+  //   imageUrl && (user.profilePicUrl = imageUrl);
+  //   gradQuote && (user.gradQuote = gradQuote);
 
-    try {
-      const newUserRef = await setDoc(doc(this.firestore, 'users', uid!), user);
-      return newUserRef;
-    } catch (error) {
-      console.error('Error writing user to Firestore', error);
-      return;
-    }
-  };
+  //   try {
+  //     const newUserRef = await setDoc(doc(this.firestore, 'users', uid!), user);
+  //     return newUserRef;
+  //   } catch (error) {
+  //     console.error('Error writing user to Firestore', error);
+  //     return;
+  //   }
+  // };
 
   // add users to firestore
   addUser = async (
@@ -250,11 +261,26 @@ export class AuthServiceService {
       return;
     }
 
+    if (this.currentUser.uid != uid) {
+      return;
+    }
+
     const user: gradUser = {
       name: this.currentUser.displayName,
       profilePicUrl: this.currentUser.photoURL,
       uid: this.currentUser.uid,
       gradQuote: gradQuote,
+      comments: {
+        public: {
+          messages: {}
+        },
+        classOnly: {
+          messages: {}
+        },
+        private: {
+          messages: {}
+        }
+      }
     };
 
     userName && (user.name = userName);
