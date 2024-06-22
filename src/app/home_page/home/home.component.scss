@@ -1,6 +1,17 @@
-#bg {
+// #bg {
+//     background-color: #272D40;
+//     height: 100%;
+// }
+
+header {
+    flex-shrink: 0;
+}
+
+.content {
     background-color: #272D40;
-    height: 100%;
+    height: calc(100vh - 56px);
+    // min-height: 100vh;
+    overflow: auto;
 }
 
 a:hover {
@@ -10,6 +21,16 @@ a:hover {
 $d: 70; // density
 $w: 600; // grid size
 $s: 7s; // speed
+
+.snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
 
 $grad: ();
 @for $i from 0 to $d {
