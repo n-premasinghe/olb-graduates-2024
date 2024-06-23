@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthServiceService } from '../../../services/auth-service.service';
@@ -13,6 +13,7 @@ import { AuthServiceService } from '../../../services/auth-service.service';
 export class NewCommentComponent {
   activeModal = inject(NgbActiveModal);
   authService = inject(AuthServiceService);
+  @Input() uid!: string;
 
   onSubmit(form: NgForm) {
     const visibility = form.value.visibility;
@@ -24,7 +25,7 @@ export class NewCommentComponent {
       return;
     }
 
-    this.authService.addComment(message, this.authService.currentUser!.uid, this.authService.currentUser!.displayName, visibility);
+    this.authService.addComment(message, this.uid, this.authService.currentUser!.displayName, visibility);
 
   }
 

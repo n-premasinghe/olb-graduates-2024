@@ -17,7 +17,7 @@ import { CommentsComponent } from '../comments/comments.component';
 
 export class ProfileComponent{
   authService = inject(AuthServiceService);
-  
+
   @Input() uid!: string;
 
   users$ = this.authService.loadUsers() as Observable<DocumentData[]>
@@ -25,7 +25,7 @@ export class ProfileComponent{
   userDB$ = this.users$.pipe(
     map(users => {
       for (const user of users) {
-        console.log(user);
+        // console.log(user);
         if (user['uid'] === this.uid) {
           console.log(user);
           return user;

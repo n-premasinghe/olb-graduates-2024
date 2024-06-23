@@ -50,6 +50,8 @@ type Comment = {
   uid: string;
   name: string | null;
   message: string;
+  visibility: string;
+  profilePicUrl: string | null;
 };
 
 import { Router } from '@angular/router';
@@ -198,45 +200,6 @@ export class AuthServiceService {
     this.router.navigate(['/', 'home']);
   }
 
-  // update users in firestore
-  // updateUser = async (
-  //   userName: string | null,
-  //   uid: string | null,
-  //   imageUrl: string | null,
-  //   gradQuote: string | null
-  // ): Promise<void | DocumentReference<DocumentData>> => {
-
-  //   if (!userName && !imageUrl && !gradQuote) {
-  //     console.log('addUser called without name, pfp, or quote');
-  //     return;
-  //   }
-
-  //   if (this.currentUser === null) {
-  //     console.log('add user requires user');
-  //     return;
-  //   }
-
-  //   const user: gradUser = {
-  //     name: this.currentUser.displayName,
-  //     profilePicUrl: this.currentUser.photoURL,
-  //     uid: this.currentUser.uid,
-  //     gradQuote: gradQuote,
-  //   };
-
-  //   userName && (user.name = userName);
-  //   uid && (user.uid = uid);
-  //   imageUrl && (user.profilePicUrl = imageUrl);
-  //   gradQuote && (user.gradQuote = gradQuote);
-
-  //   try {
-  //     const newUserRef = await setDoc(doc(this.firestore, 'users', uid!), user);
-  //     return newUserRef;
-  //   } catch (error) {
-  //     console.error('Error writing user to Firestore', error);
-  //     return;
-  //   }
-  // };
-
   // add users to firestore
   addUser = async (
     userName: string | null,
@@ -294,22 +257,33 @@ export class AuthServiceService {
       message: message,
       uid: this.currentUser!.uid,
       name: name,
+      visibility: visibility,
+      profilePicUrl: this.currentUser!.photoURL
     }
 
     try {
-      const commentRef = await setDoc(doc(this.firestore, 'users', uid, 'comments', visibility), comment);
+      const commentRef = await setDoc(doc(this.firestore, 'users', uid, visibility, uid), comment);
       return commentRef
     } catch (error) {
       console.error('error adding comment', error);
+      return null;
     }
   };
 
-  loadComments = (uid: string) => {
-    const commentQuery = query(collection(this.firestore, 'users', uid, 'comments'));
+  loadComments = (uid: string, visibility: string) => {
+    console.log(uid);
+    const commentQuery = query(collection(this.firestore, 'users', uid, visibility));
 
-    return collectionData(query);
+    // console.log(commentQuery);
+
+    // const comments$ = collectionData(commentQuery) as Observable<DocumentData[]>;
+
+    // comments$.forEach((comment) => {
+    //   console.log(comment);
+    // });
+    
+
+    return collectionData(commentQuery);
   }
-
-
 
 }

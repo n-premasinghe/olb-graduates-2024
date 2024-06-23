@@ -11,7 +11,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './user-card.component.scss'
 })
 export class UserCardComponent {
-  @Input() user!: DocumentData
+  @Input() user!: DocumentData;
   @Output() userSelected = new EventEmitter<DocumentData>();
 
   authService = inject(AuthServiceService);

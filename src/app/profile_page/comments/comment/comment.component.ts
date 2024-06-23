@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { DocumentData } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-comment',
@@ -8,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './comment.component.scss'
 })
 export class CommentComponent {
+  @Input() comment!: DocumentData;
 
 }
