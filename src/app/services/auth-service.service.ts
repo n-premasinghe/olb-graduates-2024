@@ -262,7 +262,7 @@ export class AuthServiceService {
     }
 
     try {
-      const commentRef = await setDoc(doc(this.firestore, 'users', uid, visibility, uid), comment);
+      const commentRef = await setDoc(doc(this.firestore, 'users', uid, visibility, this.currentUser!.uid), comment);
       return commentRef
     } catch (error) {
       console.error('error adding comment', error);
@@ -271,7 +271,7 @@ export class AuthServiceService {
   };
 
   loadComments = (uid: string, visibility: string) => {
-    console.log(uid);
+    // console.log(uid);
     const commentQuery = query(collection(this.firestore, 'users', uid, visibility));
 
     // console.log(commentQuery);

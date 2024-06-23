@@ -19,7 +19,7 @@ export class NewCommentComponent {
     const visibility = form.value.visibility;
     const message = form.value.comment;
 
-    console.log(visibility);
+    // console.log(visibility);
 
     if (!form.valid) {
       return;

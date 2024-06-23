@@ -27,7 +27,7 @@ export class ProfileComponent{
       for (const user of users) {
         // console.log(user);
         if (user['uid'] === this.uid) {
-          console.log(user);
+          // console.log(user);
           return user;
         }
       }

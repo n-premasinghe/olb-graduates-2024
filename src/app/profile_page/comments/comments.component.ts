@@ -27,7 +27,7 @@ export class CommentsComponent implements OnInit{
     this.commentsPublic$ = this.authService.loadComments(this.uid, 'public');
     this.commentsClassOnly$ = this.authService.loadComments(this.uid, 'classOnly');
     this.commentsPrivate$ = this.authService.loadComments(this.uid, 'private');
-    console.log(this.commentsPublic$);
+    // console.log(this.commentsPublic$);
   }
 
 

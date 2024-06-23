@@ -7,7 +7,10 @@
     </div>
     @if(commentsPrivate$ | async; as comments) {
         @for (comment of comments; track comment['uid']) {
-            <app-comment [comment]="comment"/>
+            @if (this.authService.currentUser!.uid == uid || this.authService.currentUser!.uid == comment['uid']) {
+                <app-comment [comment]="comment"/>
+            }
+            
         }
 
         <hr class="my-2" />
