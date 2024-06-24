@@ -37,7 +37,7 @@ import {
   doc,
 } from '@angular/fire/firestore';
 
-import { getStorage } from '@angular/fire/storage';
+import { getDownloadURL, getStorage, ref, Storage, uploadBytesResumable } from '@angular/fire/storage';
 
 import { AsyncPipe } from '@angular/common';
 
@@ -170,14 +170,14 @@ export class AuthServiceService {
   }
 
   // Excess info functions
-  addDisplayName(name: string, gradQuote: string) {
+  updateDBProfile(name: string, gradQuote: string, file: any) {
     updateProfile(this.currentUser!, {
       displayName: name,
     }).then(() => {
       this.addUser(
         this.currentUser!.displayName,
         this.currentUser!.uid,
-        null,
+        file,
         gradQuote
       );
     });
@@ -188,12 +188,12 @@ export class AuthServiceService {
   addUser = async (
     userName: string | null,
     uid: string | null,
-    imageUrl: string | null,
+    image: any | null,
     gradQuote: string | null
   ): Promise<void | DocumentReference<DocumentData>> => {
     const users$ = this.loadUsers() as Observable<DocumentData[]>;
 
-    if (!userName && !imageUrl && !gradQuote) {
+    if (!userName && !image && !gradQuote) {
       console.log('addUser called without name, pfp, or quote');
       return;
     }
@@ -214,9 +214,26 @@ export class AuthServiceService {
       gradQuote: gradQuote,
     };
 
+    if (image != null) {
+      try {
+        // 1 - Upload Image
+        const filePath = this.currentUser.uid + '/' + image.name;
+        const newImageRef = ref(this.storage, filePath);
+        const fileSnapshot = await uploadBytesResumable(newImageRef, image);
+  
+        // generate url to ref
+        const publicImageUrl = await getDownloadURL(newImageRef);
+
+        user.profilePicUrl = publicImageUrl;
+  
+      } catch (error) {
+        console.error('there was an error uploading the file to Cloud Storage:', error)
+      }
+    }
+
     userName && (user.name = userName);
     uid && (user.uid = uid);
-    imageUrl && (user.profilePicUrl = imageUrl);
+    image && (user.profilePicUrl = image);
     gradQuote && (user.gradQuote = gradQuote);
 
     try {

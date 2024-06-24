@@ -14,12 +14,17 @@ export class UpdateProfileComponent {
   onSubmit(form: NgForm) {
     const displayName = form.value.displayName;
     const gradQuote = form.value.gradQuote;
+    const imgFile: File = form.value.profilePic;
 
     if (!form.valid) {
-      return
+      return;
     }
 
-    this.authService.addDisplayName(displayName, gradQuote);
+    if (!imgFile) {
+      return;
+    }
+
+    this.authService.updateDBProfile(displayName, gradQuote, imgFile);
 
     // this.authService.addUser()
 
