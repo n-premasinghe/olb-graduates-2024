@@ -37,6 +37,8 @@ import {
   doc,
 } from '@angular/fire/firestore';
 
+import { getStorage } from '@angular/fire/storage';
+
 import { AsyncPipe } from '@angular/common';
 
 type gradUser = {
@@ -78,7 +80,8 @@ export class AuthServiceService {
   userSubscription: Subscription;
 
   firestore: Firestore = inject(Firestore);
-  // storage: Storage = inject(Storage);
+  storage: Storage = inject(Storage);
+  LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
 
   constructor() {
     this.userSubscription = this.user$.subscribe((aUser: User | null) => {
@@ -165,25 +168,6 @@ export class AuthServiceService {
         console.log(error);
       });
   }
-
-  // getSelectedUser(uid: string): Observable<DocumentData | null> {
-
-  //   const users$ = this.loadUsers() as Observable<DocumentData[]>;
-
-  //   return users$.pipe(
-  //     map(users => {
-  //       for (const user of users) {
-  //         console.log(user);
-  //         if (user['uid'] === uid) {
-  //           console.log(user);
-  //           return user;
-  //         }
-  //       }
-  //       return null;
-  //     })
-  //   )
-
-  // };
 
   // Excess info functions
   addDisplayName(name: string, gradQuote: string) {
